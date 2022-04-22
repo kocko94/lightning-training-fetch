@@ -18,6 +18,7 @@
  */
 
 import { Lightning, Utils } from '@lightningjs/sdk'
+import { getPerson } from './lib/api'
 
 export default class App extends Lightning.Component {
   static getFonts() {
@@ -32,6 +33,32 @@ export default class App extends Lightning.Component {
         h: 1080,
         color: 0xfffbb03b,
       },
+      Results: {
+        rect: true,
+        color: 0xff808080,
+        flex: {
+          direction: 'column',
+          padding: 20,
+        },
+        children: [],
+      },
     }
+  }
+
+  async _init() {
+    let data = await getPerson()
+
+    const people = data.results.map(person => {
+      return {
+        text: {
+          text: person.name,
+        },
+      }
+    })
+
+    this.tag('Results').patch({
+      children: people,
+    })
+    // this.tag('Results').children = pData
   }
 }
